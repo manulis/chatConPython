@@ -46,8 +46,10 @@ app.add_middleware(
 
 html= """
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket Chat</title>
     <style>
         body {
@@ -64,20 +66,20 @@ html= """
         label {
             font-weight: bold;
             margin-right: 10px;
+            display: block;
         }
-        input[type="text"] {
+        input[type="text"], button {
             padding: 8px;
             font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            margin-bottom: 10px;
+            width: calc(100% - 22px);
         }
         button {
-            padding: 8px 16px;
-            font-size: 16px;
             background-color: #007bff;
             color: #fff;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
         }
         button:hover {
@@ -85,7 +87,6 @@ html= """
         }
         #chat-container {
             margin-top: 20px;
-            display: none;
         }
         #message-container {
             max-height: 200px;
@@ -94,21 +95,27 @@ html= """
             border-radius: 5px;
             padding: 10px;
             background-color: #fff;
+            margin-bottom: 10px;
         }
         #message {
-            width: calc(100% - 120px);
+            width: calc(100% - 76px);
             margin-right: 10px;
         }
     </style>
 </head>
 <body>
     <div id="container">
-        
-        <label for="user-id">Enter your user ID:</label>
-        <input type="text" id="user-id">
-        <button onclick="connect()">Connect</button>
+        <div id="connection-container">
+            <label for="user-id">Enter your user ID:</label>
+            <input type="text" id="user-id">
+            
+            <label for="user-id2">Enter the user ID of the person you want to message:</label>
+            <input type="text" id="user-id2">
+            
+            <button onclick="connect()">Connect</button>
+        </div>
 
-        <div id="chat-container">
+        <div id="chat-container" style="display: none;">
             <div id="message-container"></div>
             <input type="text" id="message" placeholder="Enter message">
             <button onclick="sendMessage()">Send</button>
@@ -120,10 +127,7 @@ html= """
 
         function connect() {
             var userId = document.getElementById("user-id").value;
-            var userId2 = 2;
-            if(userId == 2){
-                userId2 = 1; 
-            }
+            var userId2 = document.getElementById("user-id2").value || 1; // Default value if not provided
             socket = new WebSocket('ws://localhost:8000/ws/' + userId + '/' + userId2);
             socket.onopen = function(event) {
                 console.log("WebSocket connected.");
@@ -149,6 +153,7 @@ html= """
     </script>
 </body>
 </html>
+
 
 
 """
