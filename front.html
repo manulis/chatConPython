@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chat</title>
+    <title>WebSocket Chat - Manuel Villalba</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,10 +59,10 @@
 <body>
     <div id="container">
         <div id="connection-container">
-            <label for="user-id">Enter your user ID:</label>
+            <label for="user-id">Enter your user Name:</label>
             <input type="text" id="user-id">
             
-            <label for="user-id2">Enter the user ID of the person you want to message:</label>
+            <label for="user-id2">Enter the user Name of the persona you want message:</label>
             <input type="text" id="user-id2">
             
             <button onclick="connect()">Connect</button>
@@ -80,14 +80,14 @@
 
         function connect() {
             var userId = document.getElementById("user-id").value;
-            var userId2 = document.getElementById("user-id2").value || 1; // Default value if not provided
+            var userId2 = document.getElementById("user-id2").value || 1; 
             socket = new WebSocket('ws://localhost:8000/ws/' + userId + '/' + userId2);
             socket.onopen = function(event) {
-                console.log("WebSocket connected.");
+                
                 document.getElementById("chat-container").style.display = "block";
             };
             socket.onmessage = function(event) {
-                console.log("Message received:", event.data);
+             
                 displayMessage(event.data);
             };
         }

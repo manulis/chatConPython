@@ -124,10 +124,16 @@ connectionmanager = ConnectionManager()
 
 
 #Conexion a websocket
-@app.websocket("/ws/{id_usuario}/{id_usuario2}")
-async def websocket_endpoint(websocket: WebSocket, id_usuario: int, id_usuario2: int ):
+@app.websocket("/ws/{Nombre1}/{Nombre2}")
+async def websocket_endpoint(websocket: WebSocket, Nombre1: str, Nombre2: str ):
 
     await connectionmanager.connect(websocket)
+
+    Response1 = supabase.table("usuario").select("id").eq("nombre", Nombre1).execute()
+    Response2 = supabase.table("usuario").select("id").eq("nombre", Nombre2).execute()
+
+    id_usuario = Response1['data'][0]['id']
+    id_usuario2 = Response2['data'][0]['id']
 
     connected_users[id_usuario] = websocket
 
@@ -139,13 +145,13 @@ async def websocket_endpoint(websocket: WebSocket, id_usuario: int, id_usuario2:
         if(mensaje.id_usuario_emisor == id_usuario):
             await connectionmanager.send_personal_message(f"You  : {mensaje.texto}", websocket)
         else:
-            await connectionmanager.send_personal_message(f"User {mensaje.id_usuario_emisor} : {mensaje.texto}", websocket)
+            await connectionmanager.send_personal_message(f" {Nombre2} : {mensaje.texto}", websocket)
 
     try:
         while True:
             data = await websocket.receive_text()
             await connectionmanager.send_personal_message(f"You  : {data}", websocket)
-            await connectionmanager.broadcast(f"User {id_usuario}: {data}", websocket)
+            await connectionmanager.broadcast(f"{Nombre1}: {data}", websocket)
             mensaje = Mensaje(id_usuario_emisor=id_usuario, id_usuario_receptor=id_usuario2, texto=data, leido=False, estado="enviado")
             print(mensaje)
             await insert_message(mensaje)
