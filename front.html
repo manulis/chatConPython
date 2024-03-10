@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        #container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+            display: block;
+        }
+        input[type="text"], button {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            width: calc(100% - 22px);
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #chat-container {
+            margin-top: 20px;
+        }
+        #message-container {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+            margin-bottom: 10px;
+        }
+        #message {
+            width: calc(100% - 76px);
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="connection-container">
+            <label for="user-id">Enter your user ID:</label>
+            <input type="text" id="user-id">
+            
+            <label for="user-id2">Enter the user ID of the person you want to message:</label>
+            <input type="text" id="user-id2">
+            
+            <button onclick="connect()">Connect</button>
+        </div>
+
+        <div id="chat-container" style="display: none;">
+            <div id="message-container"></div>
+            <input type="text" id="message" placeholder="Enter message">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        var socket;
+
+        function connect() {
+            var userId = document.getElementById("user-id").value;
+            var userId2 = document.getElementById("user-id2").value || 1; // Default value if not provided
+            socket = new WebSocket('ws://localhost:8000/ws/' + userId + '/' + userId2);
+            socket.onopen = function(event) {
+                console.log("WebSocket connected.");
+                document.getElementById("chat-container").style.display = "block";
+            };
+            socket.onmessage = function(event) {
+                console.log("Message received:", event.data);
+                displayMessage(event.data);
+            };
+        }
+
+        function sendMessage() {
+            var message = document.getElementById("message").value;
+            socket.send(message);
+            document.getElementById("message").value = '';
+        }
+
+        function displayMessage(message) {
+            var messageElement = document.createElement("div");
+            messageElement.textContent = message;
+            document.getElementById("message-container").appendChild(messageElement);
+        }
+    </script>
+</body>
+</html>
