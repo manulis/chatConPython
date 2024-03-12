@@ -9,8 +9,8 @@ from fastapi.websockets import WebSocketDisconnect
 
 app = FastAPI()
 
-SUPABASE_URL = "https://zwrwcaxpczcdnobaveqs.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3cndjYXhwY3pjZG5vYmF2ZXFzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwNzk4NjI3OSwiZXhwIjoyMDIzNTYyMjc5fQ.4a1AOfnqiUMgj03tSb1N-No6e-i9h8A-i3kF2knAJxU"
+SUPABASE_URL = "enpoint_Supabase"
+SUPABASE_KEY = "Token_Supabase"
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
